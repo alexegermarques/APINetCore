@@ -1,34 +1,35 @@
-﻿
+﻿using Microsoft.EntityFrameworkCore;
+
 namespace ApiNetCore;
 
 public class StockServiceImpl(ApplicationDbContext dbContext) : IStockService
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
 
-    public void Add(Stock stock)
+    public async Task Add(Stock stock)
     {
-        _dbContext.Stocks.Add(stock);
-        _dbContext.SaveChanges();
+        await _dbContext.Stocks.AddAsync(stock);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public void Delete(int id)
+    public async Task Delete(int id)
     {
-        var stock = _dbContext.Stocks.FirstOrDefault(s => s.Id == id) ?? throw new BusinessException("Nenhum dados encontrado com esse ID.");
+        var stock = await _dbContext.Stocks.FirstOrDefaultAsync(s => s.Id == id) ?? throw new BusinessException("Nenhum dados encontrado com esse ID.");
         _dbContext.Stocks.Remove(stock);
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
     }
 
-    public List<Stock> FindAll() => [.. _dbContext.Stocks];
+    public async Task<List<Stock>> FindAll() => await _dbContext.Stocks.ToListAsync();
 
-    public Stock FindById(int id)
+    public async Task<Stock> FindById(int id)
     {
-        var stock = _dbContext.Stocks.FirstOrDefault(s => s.Id == id) ?? throw new BusinessException("Nenhum dados encontrado com esse ID.");
+        var stock = await _dbContext.Stocks.FirstOrDefaultAsync(s => s.Id == id) ?? throw new BusinessException("Nenhum dados encontrado com esse ID.");
         return stock;
     }
 
-    public void Update(int id, Stock stockUpdate)
+    public async Task Update(int id, Stock stockUpdate)
     {
-        var stock = _dbContext.Stocks.FirstOrDefault(s => s.Id == id) ?? throw new BusinessException("Nenhum dados encontrado com esse ID.");
+        var stock = await _dbContext.Stocks.FirstOrDefaultAsync(s => s.Id == id) ?? throw new BusinessException("Nenhum dados encontrado com esse ID.");
 
         stock.CompanyName = stockUpdate.CompanyName;
         stock.Industry = stockUpdate.Industry;
@@ -38,6 +39,6 @@ public class StockServiceImpl(ApplicationDbContext dbContext) : IStockService
         stock.MarketCap = stockUpdate.MarketCap;
 
         _dbContext.Update(stock);
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
     }
 }
