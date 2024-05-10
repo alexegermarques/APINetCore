@@ -9,16 +9,16 @@ public class StockController(IStockService stockService) : ControllerBase
     private readonly IStockService _stockService = stockService;
 
     [HttpGet]
-    public IActionResult FindAll()
+    public async Task<IActionResult> FindAll()
     {
-        var stocks = _stockService.FindAll();
+        var stocks = await _stockService.FindAll();
         return Ok(StockMapper.MapperToDTOList(stocks));
     }
 
     [HttpGet("{id}")]
-    public IActionResult FindById([FromRoute] int id)
+    public async Task<IActionResult> FindById([FromRoute] int id)
     {
-        var stock = _stockService.FindById(id);
+        var stock = await _stockService.FindById(id);
 
         if (stock is null)
         {
@@ -29,24 +29,23 @@ public class StockController(IStockService stockService) : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] StockDTO stock)
+    public async Task<IActionResult> Create([FromBody] StockDTO stock)
     {
-        _stockService.Add(StockMapper.MapperToEntity(stock));
+        await _stockService.Add(StockMapper.MapperToEntity(stock));
         return CreatedAtAction(nameof(FindById), new { id = stock.Id }, stock);
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete([FromRoute] int id)
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        _stockService.Delete(id);
+        await _stockService.Delete(id);
         return NoContent();
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update([FromRoute] int id, [FromBody] StockDTO stockDTO)
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] StockDTO stockDTO)
     {
-        _stockService.Update(id, StockMapper.MapperToEntity(stockDTO));
-
+        await _stockService.Update(id, StockMapper.MapperToEntity(stockDTO));
         return NoContent();
     }
 }
