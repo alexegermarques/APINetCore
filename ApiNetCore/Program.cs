@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddTransient<IStockService, StockServiceImpl>();
+builder.Services.AddTransient<ICommentService, CommentServiceImpl>();
 
 var connectionString = builder.Configuration.GetConnectionString("DevConnection");
 
