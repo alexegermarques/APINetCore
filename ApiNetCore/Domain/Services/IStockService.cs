@@ -6,5 +6,5 @@ public interface IStockService
     List<Stock> FindAll();
     Stock FindById(int id);
     void Delete(int id);
-    void Update(int id, Stock stock);
+    void Update(int id, Stock stockUpdate);
 }

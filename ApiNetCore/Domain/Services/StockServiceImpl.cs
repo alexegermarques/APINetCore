@@ -26,8 +26,18 @@ public class StockServiceImpl(ApplicationDbContext dbContext) : IStockService
         return stock;
     }
 
-    public void Update(int id, Stock stock)
+    public void Update(int id, Stock stockUpdate)
     {
-        throw new NotImplementedException();
+        var stock = _dbContext.Stocks.FirstOrDefault(s => s.Id == id) ?? throw new BusinessException("Nenhum dados encontrado com esse ID.");
+
+        stock.CompanyName = stockUpdate.CompanyName;
+        stock.Industry = stockUpdate.Industry;
+        stock.Symbol = stockUpdate.Symbol;
+        stock.Purchase = stockUpdate.Purchase;
+        stock.LastDiv = stockUpdate.LastDiv;
+        stock.MarketCap = stockUpdate.MarketCap;
+
+        _dbContext.Update(stock);
+        _dbContext.SaveChanges();
     }
 }

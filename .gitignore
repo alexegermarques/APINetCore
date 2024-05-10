@@ -1,0 +1,7 @@
+#Arquivos de Compilação
+bin/
+obj/
+
+#Arquivo de configuração Visual Studio
+.vs/
+.vscode/

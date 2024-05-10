@@ -29,7 +29,7 @@ public class StockController(IStockService stockService) : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create(StockDTO stock)
+    public IActionResult Create([FromBody] StockDTO stock)
     {
         _stockService.Add(StockMapper.MapperToEntity(stock));
         return CreatedAtAction(nameof(FindById), new { id = stock.Id }, stock);
@@ -39,6 +39,14 @@ public class StockController(IStockService stockService) : ControllerBase
     public IActionResult Delete([FromRoute] int id)
     {
         _stockService.Delete(id);
+        return NoContent();
+    }
+
+    [HttpPut("{id}")]
+    public IActionResult Update([FromRoute] int id, [FromBody] StockDTO stockDTO)
+    {
+        _stockService.Update(id, StockMapper.MapperToEntity(stockDTO));
+
         return NoContent();
     }
 }
