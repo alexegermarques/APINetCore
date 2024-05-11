@@ -5,3 +5,4 @@ obj/
 #Arquivo de configuração Visual Studio
 .vs/
 .vscode/
+.fake
