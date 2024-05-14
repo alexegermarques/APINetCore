@@ -7,4 +7,5 @@ public interface IStockService
     Task<Stock> FindById(int id);
     Task Delete(int id);
     Task Update(int id, Stock stockUpdate);
+    Task<bool> StockExists(int id);
 }

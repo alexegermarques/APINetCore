@@ -25,7 +25,8 @@ public class StockMapper
         Purchase = stock.Purchase,
         LastDiv = stock.LastDiv,
         Industry = stock.Industry,
-        MarketCap = stock.MarketCap
+        MarketCap = stock.MarketCap,
+        Comments = stock.Comments.Select(CommentMapper.ToCommentDTO).ToList()
     };
 
     public static List<StockDTO> MapperToDTOList(List<Stock> stocks)
@@ -38,7 +39,8 @@ public class StockMapper
             Purchase = s.Purchase,
             LastDiv = s.LastDiv,
             Industry = s.Industry,
-            MarketCap = s.MarketCap
+            MarketCap = s.MarketCap,
+            Comments = s.Comments.Select(CommentMapper.ToCommentDTO).ToList()
         }).ToList();
 
         return stockDTOList;

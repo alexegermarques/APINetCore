@@ -19,13 +19,15 @@ public class StockServiceImpl(ApplicationDbContext dbContext) : IStockService
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<List<Stock>> FindAll() => await _dbContext.Stocks.ToListAsync();
+    public async Task<List<Stock>> FindAll() => await _dbContext.Stocks.Include(c => c.Comments).ToListAsync();
 
     public async Task<Stock> FindById(int id)
     {
-        var stock = await _dbContext.Stocks.FirstOrDefaultAsync(s => s.Id == id) ?? throw new BusinessException("Nenhum dados encontrado com esse ID.");
+        var stock = await _dbContext.Stocks.Include(c => c.Comments).FirstOrDefaultAsync(s => s.Id == id) ?? throw new BusinessException("Nenhum dados encontrado com esse ID.");
         return stock;
     }
+
+    public Task<bool> StockExists(int id) => _dbContext.Stocks.AnyAsync(s => s.Id == id);
 
     public async Task Update(int id, Stock stockUpdate)
     {

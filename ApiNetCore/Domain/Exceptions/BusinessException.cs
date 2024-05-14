@@ -1,6 +1,6 @@
 ﻿namespace ApiNetCore;
 
-public class BusinessException : Exception
+public class BusinessException : ApplicationException
 {
     public BusinessException()
     {

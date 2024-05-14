@@ -9,4 +9,5 @@ public record class StockDTO
     public required decimal LastDiv { get; init; }
     public required string Industry { get; init; } = string.Empty;
     public required long MarketCap { get; init; }
+    public List<CommentDTO>? Comments { get; set; }
 }
