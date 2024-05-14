@@ -9,9 +9,9 @@ public class StockController(IStockService stockService) : ControllerBase
     private readonly IStockService _stockService = stockService;
 
     [HttpGet]
-    public async Task<IActionResult> FindAll()
+    public async Task<IActionResult> FindAll([FromQuery] QueryObjects query)
     {
-        var stocks = await _stockService.FindAll();
+        var stocks = await _stockService.FindAll(query);
         return Ok(StockMapper.MapperToDTOList(stocks));
     }
 

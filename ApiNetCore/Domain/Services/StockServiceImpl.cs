@@ -19,7 +19,22 @@ public class StockServiceImpl(ApplicationDbContext dbContext) : IStockService
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<List<Stock>> FindAll() => await _dbContext.Stocks.Include(c => c.Comments).ToListAsync();
+    public async Task<List<Stock>> FindAll(QueryObjects query)
+    {
+        var stocks = _dbContext.Stocks.Include(c => c.Comments).AsQueryable();
+
+        if (!string.IsNullOrEmpty(query.Symbol))
+        {
+            stocks = stocks.Where(s => s.CompanyName.Contains(query.Symbol));
+        }
+
+        if (!string.IsNullOrEmpty(query.CompanyName))
+        {
+            stocks = stocks.Where(s => s.CompanyName.Contains(query.CompanyName));
+        }
+
+        return await stocks.ToListAsync();
+    }
 
     public async Task<Stock> FindById(int id)
     {
