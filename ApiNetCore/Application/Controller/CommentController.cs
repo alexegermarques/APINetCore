@@ -16,7 +16,7 @@ public class CommentController(ICommentService commentService, IStockService sto
         return Ok(CommentMapper.ToListCommentDTO(comments));
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
         var comment = await _commentService.FindById(id);
@@ -32,6 +32,11 @@ public class CommentController(ICommentService commentService, IStockService sto
     [HttpPost]
     public async Task<IActionResult> CreateComment([FromBody] CommentDTO commentDTO)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
         if (!await _stockService.StockExists(commentDTO.StockId))
         {
             return BadRequest();
@@ -41,17 +46,38 @@ public class CommentController(ICommentService commentService, IStockService sto
         return CreatedAtAction(nameof(GetById), new {id = commentDTO.Id}, commentDTO);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateComment([FromRoute] int id, [FromBody] CommentUpdateDTO updateDTO)
-    {
+    {   
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var comment = await _commentService.FindById(id);
+
+        if (comment is null)
+        {
+            return NotFound();
+        }
+
         await _commentService.Update(id, CommentMapper.ToCommentUpdateEntity(updateDTO));
+
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteComment([FromRoute] int id)
     {
+        var comment = await _commentService.FindById(id);
+
+        if (comment is null)
+        {
+            return NotFound();
+        }
+
         await _commentService.Delete(id);
+
         return NoContent();
     }
 }
